@@ -1,0 +1,17 @@
+{{#questions}}
+  <div class="panel slide">
+    <div class="titleContainer">
+      <h2>{{title}}</h2>
+    </div>
+    <ol class=" form">
+      {{#choices}}
+        <li>
+          <label>
+            {{.}}
+            <input type="checkbox" />
+          </label>
+        </li>
+      {{/choices}}
+    </ol>
+  </div>
+{{/questions}}
