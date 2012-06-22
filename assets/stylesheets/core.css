@@ -5,33 +5,34 @@ body {
   margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p, label {    color: #2A2A2A;}
-
+h1, h2, h3, h4, h5, h6, p, label {
+  color: #2A2A2A;
+  margin-top: 0;
+}
 
 .form {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .titleContainer {
-    height: 70px;
-    padding: 10px;
-    font-size:25px;
-    
+  height: 70px;
+  padding: 10px;
+  font-size:25px;   
 }
 
 h1 {
-    margin-top: 25px;
-    font-size: 40px;
+  margin-top: 25px;
+  font-size: 40px;
 }
 
 .panel h2 {
-    display: none;
-    color: #333 !important;
+  display: none;
+  color: #333 !important;
 }
 
 .panel li {
-    padding: 0 10px;
+  padding: 0 10px;
 }
 
 .panel li input {
@@ -40,7 +41,7 @@ h1 {
 }
 
 body .highlighted:not(.buttonInline) {
-    background: #218AB9 !important;
+  background: #218AB9 !important;
 }
 
 header {
@@ -59,9 +60,11 @@ header h1 {
   padding: 0;
   font-size: 20px;
   color: #f4f4f4;
+  line-height: 20px;
 }
 
-#introduction {
+#introduction,
+#final {
   padding: 10px;
 }
 

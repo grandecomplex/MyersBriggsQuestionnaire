@@ -6,6 +6,21 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
       endEvent = hasTouch ? 'touchend' : 'mouseup',
       cancelEvent = hasTouch ? 'touchcancel' : 'mouseup';
 
+  var itemCount = 0;
+  
+  var userMetrics = {
+    E: 0,
+    I: 0,
+    N: 0,
+    S: 0,
+    F: 0,
+    T: 0,
+    P: 0,
+    J: 0
+  };
+  
+  var score = 0;
+
   var Q = function() {
     this.addEvents();
   };
@@ -13,17 +28,25 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   Q.prototype.addEvents = function() {
     var that = this;
     var $body = $("body");
-    
     $body.on(endEvent, ".panel li", function() {
       var $this = $(this);
+      
+      score += $this.index();
+      
       $this.addClass("highlighted");
       var timer = setTimeout(function() {
         $this.removeClass("highlighted");
-        that.next();
+        if (itemCount === that.$panel.children().length) {
+          that.finish();
+        } else {
+          that.next();
+        }
       }.bind(this), 300);
     });
-    
-    $body.on(endEvent, "#start", this.start.bind(this));
+        
+    $body.on(endEvent, "#start", function() {
+      that.start();
+    });
     
     $(window).bind("unload", this.removeEvents.bind(this));
   };
@@ -36,7 +59,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     var panel = document.createElement("section");
     var $panel = this.$panel = $(panel);
     
-    $("#introduction").fadeOut();
+    $("#introduction").addClass("out");
     
     $("#header").after(panel);
 
@@ -48,8 +71,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   
   Q.prototype.next = function() {
     var $panels = this.$panel.find(".panel"),
-        shouldEnter = false,
-        itemCount = 0;
+        shouldEnter = false;
         
     var getItem = function(index) {
       return $panels.eq(index);
@@ -73,6 +95,13 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   };
   
   Q.prototype.previous = function() {};
+  
+  Q.prototype.finish = function() {
+    utils.render(score, "assets/partials/final-card.html", function(compiledHTML) {
+      this.$panel.addClass("out");
+      this.$panel.after(compiledHTML);
+    }.bind(this));
+  };
 
   return new Q();
 
