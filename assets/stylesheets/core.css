@@ -3,6 +3,7 @@ body {
   font-family: "helvetica neue", helvetica, sans-serif;
   padding-top: 44px;
   margin: 0;
+  height: 370px;
 }
 
 h1, h2, h3, h4, h5, h6, p, label {
@@ -16,9 +17,7 @@ h1, h2, h3, h4, h5, h6, p, label {
 }
 
 .titleContainer {
-  height: 70px;
   padding: 10px;
-  font-size:25px;   
 }
 
 h1 {
@@ -26,9 +25,15 @@ h1 {
   font-size: 40px;
 }
 
+.panel {
+  width: 300px;
+  overflow: hidden;
+}
+
 .panel h2 {
   display: none;
   color: #333 !important;
+  line-height: 36px;
 }
 
 .panel li {
@@ -53,6 +58,7 @@ header {
   left: 0;
   background: #6F7070;
   padding: 13px 0;
+  z-index: 200;
 }
 
 header h1 {

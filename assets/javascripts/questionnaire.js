@@ -22,6 +22,10 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   var score = 0;
 
   var Q = function() {
+    var timer = setTimeout(function() {
+      window.scrollTo( 0, 1 );
+    }, 50);
+    
     this.addEvents();
   };
   
@@ -41,7 +45,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
         } else {
           that.next();
         }
-      }.bind(this), 300);
+      }, 300);
     });
         
     $body.on(endEvent, "#start", function() {
@@ -49,6 +53,10 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     });
     
     $(window).bind("unload", this.removeEvents.bind(this));
+    
+    $(".out").bind("webkitAnimationEnd", function() {
+      $(this).hide();
+    });
   };
   
   Q.prototype.removeEvents = function() {
@@ -56,17 +64,17 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   };
   
   Q.prototype.start = function() {
+    var that = this;
     var panel = document.createElement("section");
     var $panel = this.$panel = $(panel);
     
     $("#introduction").addClass("out");
     
     $("#header").after(panel);
-
     utils.render(questions, "assets/partials/question-card.html", function(compiledHTML) {
       $panel.append(compiledHTML);
-      this.next();
-    }.bind(this));
+      that.next();
+    });
   };
   
   Q.prototype.next = function() {
@@ -97,10 +105,11 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   Q.prototype.previous = function() {};
   
   Q.prototype.finish = function() {
+    var that = this;
     utils.render(score, "assets/partials/final-card.html", function(compiledHTML) {
-      this.$panel.addClass("out");
-      this.$panel.after(compiledHTML);
-    }.bind(this));
+      that.$panel.addClass("out");
+      that.$panel.after(compiledHTML);
+    });
   };
 
   return new Q();
