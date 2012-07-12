@@ -5,9 +5,9 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
       moveEvent = hasTouch ? 'touchmove' : 'mousemove',
       endEvent = hasTouch ? 'touchend' : 'mouseup',
       cancelEvent = hasTouch ? 'touchcancel' : 'mouseup';
-
-  var itemCount = 0;
   
+  var TOTAL_QUESTIONS = questions.questions.length;
+
   function getPercentage(number) {
     return Math.round( ( number / 20 ) * 100 );
   }
@@ -79,8 +79,17 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     var url = window.location.href;
     var index = url.lastIndexOf("?metrics=");
     
+    this.itemCount = 0;
+    
     this.$currentSlide = [];
-    this.$counter = $("#counter");
+    
+    this.counter = {
+      current: $("#count-current"), 
+      total: $("#count-total"),
+      wrapper: $("#counter")
+    };
+        
+    this.counter.total.text(TOTAL_QUESTIONS);
     
     if (index > 0) {
       var data = window.location.href.substring(index+9, window.location.href.length);
@@ -126,7 +135,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
       
       var timer = setTimeout(function() {
         $this.removeClass("highlighted");
-        if (itemCount === that.$panel.children().length) {
+        if (this.itemCount === that.$panel.children().length) {
           that.finish();
         } else {
           that.next();
@@ -167,6 +176,8 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   Q.prototype.start = function(callback) {
     var that = this;
     
+    this.counter.wrapper.show();
+    
     if (this.$panel && this.$panel.length) {
       return this.goTo(this.$panel);
     }
@@ -174,8 +185,8 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     var panel = document.createElement("section");
     var $panel = this.$panel = $(panel);
     
-    $("#introduction").addClass("out");
-    
+    this.goTo($panel);
+
     $("#header").after(panel);
     
     utils.render(questions, "assets/partials/question-card.html", function(compiledHTML) {
@@ -188,23 +199,33 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     });
   };
   
-  Q.prototype.next = function() {
-    var $panels = this.$panel.find(".panel");
-        
-    var $outgoing = this.$currentSlide;
+  Q.prototype.goToQuestion = function(number) {
+    var panels = this.$panel.find(".panel");
+    this.itemCount = number;
+    this.transition(panels.eq(number), this.$currentSlide);
+  }
+  
+  Q.prototype.next = function() {        
+    var $outgoing = this.$currentSlide,
+        $incoming = $outgoing.next();
     
-    var $incoming = this.$currentSlide.next();
+    if (TOTAL_QUESTIONS === this.itemCount) {
+      return this.finish();
+    }
+    
+    this.itemCount++;
 
     this.transition($incoming, $outgoing);
   };
   
-  Q.prototype.previous = function() {
-    var $panels = this.$panel.find(".panel");
-    
+  Q.prototype.previous = function() {    
     var $outgoing = this.$currentSlide,
-        $incoming = this.$currentSlide.prev();
-        
+        $incoming = $outgoing.prev();
+    
+    this.itemCount--;
+    
     if (!$incoming.length) {
+      this.counter.wrapper.hide();
       return this.goTo($("#introduction"));
     }
 
@@ -215,6 +236,8 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     var outClass = "s-out";
     var inClass = (direction === "reverse") ? "s-in-reverse" : "s-in";
     
+    this.updateCounter();
+    
     $incoming.addClass("slide-current");
     
     if ($outgoing) {
@@ -224,12 +247,12 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
 
     $incoming.find("h2").fadeIn();
 
-    if (itemCount !== 1) {
+    if (this.itemCount !== 1) {
       slide($outgoing, outClass);
     }
 
     slide($incoming, inClass);
-    
+        
     this.$currentSlide = $incoming;
   };
   
@@ -249,11 +272,9 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     };
     
     utils.render(content, "assets/partials/final-card.html", function(compiledHTML) {
-      if (that.$panel) {
-        that.$panel.addClass("out").after(compiledHTML);
-      } else {
-        $("#introduction").addClass("out").after(compiledHTML);
-      }
+      that.$final = $(compiledHTML);
+      $(document.body).append(that.$final);
+      that.goTo(that.$final);
     });
   };
   
@@ -272,13 +293,15 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   };
   
   Q.prototype.updateCounter = function() {
-    
+    this.counter.current.text(this.itemCount+1);
   }
   
   Q.prototype.goTo = function($section) {
     $("body > section").addClass("out").removeClass("in");
     $section.show().addClass("in").removeClass("out");
   }
+  
+
   
   return window.q = new Q();
 

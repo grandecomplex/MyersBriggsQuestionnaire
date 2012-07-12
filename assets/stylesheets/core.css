@@ -78,6 +78,7 @@ header p {
   float: left;
   margin-left: 10px;
   color: #fff;
+  position: absolute;
 }
 
 #introduction {
