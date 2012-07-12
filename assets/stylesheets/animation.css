@@ -29,21 +29,25 @@ body > section {
 
 .slide li {
   -webkit-transform: translate3d(120%, 0, 0);
-  font-size: 40px;
+  font-size: 23px;
+  margin-bottom: 10px;
   -webkit-animation-duration: .7s;
   -webkit-animation-iteration-count: 1;
   -webkit-animation-timing-function: easeinout;
   list-style: none;
+  padding: 10px 12px;
 }
 
 .slide {
   position: absolute;
   top: 39px;
   width: 100%;
+  display: none;
 }
 
 .slide-current {
   z-index: 100;
+  display: block;
 }
 
 .slide .s-in {
@@ -63,4 +67,23 @@ body > section {
   -moz-animation-name: slideouttoleft;
   transform: translate(-100%, 0);
   animation-name: slideouttoleft;
+}
+
+.slide .s-in-reverse {
+  -webkit-transform: translate3d(0%, 0, 0);
+  -moz-transform: translate(0%, 0);
+  transform: translate(0%, 0);
+  opacity: 1;
+  -webkit-animation-name: slideinfromleft;
+  -moz-animation-name: slideinfromleft;
+  animation-name: slideinfromleft;
+}
+
+.slide .s-out-reverse {
+  -webkit-transform: translate3d(-100%, 0, 0);
+  -webkit-animation-name: slideouttoright;
+  -moz-transform: translate(-100%, 0);
+  -moz-animation-name: slideouttoright;
+  transform: translate(-100%, 0);
+  animation-name: slideouttoright;
 }

@@ -1,4 +1,25 @@
 <section id="final">
   <h2>Now You Know Thyself</h2>
-  <p>{{.}} is your score</p>
+  <h3>Your type is <span class="type">{{type}}</span></h3>
+  <table>
+    <tr>
+      {{#metrics}}
+        <td><p>Extraversion</p></td>
+        <td><p>Introversion</p></td>
+        <td><p>Intuition</p></td>
+        <td><p>Sensing</p></td>
+        <td><p>Feeling</p></td>
+        <td><p>Thinking</p></td>
+        <td><p>Perception</p></td>
+        <td><p>Judging</p></td>
+      {{/metrics}}
+  </tr>
+  <tr>
+    {{#percentages}}
+      <td><div style="height: {{.}}px"></div>{{.}}%</td>
+    {{/percentages}}
+  </tr>
+  </table>
+  <a id="shareEmail" class="btn" href="mailto:?Subject=My personality type is {{type}}&Body=Metrics:%0D%0A{{{results}}}%0D%0A See a graph of the results by copy and pasting the entire below url. below.%0D%0Ahttp://www.alexgrande.com/clients/leetaylor/q/?metrics={{metricsJson}}">Email Results</a>
+  <button id="startOver">Start Over</button>
 </section>

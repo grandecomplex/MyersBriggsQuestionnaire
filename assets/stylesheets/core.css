@@ -11,6 +11,10 @@ h1, h2, h3, h4, h5, h6, p, label {
   margin-top: 0;
 }
 
+.none {
+  display: none;
+}
+
 .form {
   margin: 0;
   padding: 0;
@@ -33,7 +37,8 @@ h1 {
 .panel h2 {
   display: none;
   color: #333 !important;
-  line-height: 36px;
+  line-height: 27px;
+  margin-top: 11px;
 }
 
 .panel li {
@@ -69,13 +74,57 @@ header h1 {
   line-height: 20px;
 }
 
+header p {
+  float: left;
+  margin-left: 10px;
+  color: #fff;
+}
+
+#introduction {
+  position: absolute;
+}
+
 #introduction,
 #final {
   padding: 10px;
 }
 
-button {
-  padding: 10px 12px;
+button,
+.btn {
+  padding: 7px 5px;
   border-radius: 5px;
+  border: 1px solid #666;
+  text-decoration: none;
+  background: #D4D4D4;
+  color: #888;
+  font-size: 13px;
 }
 
+#final {
+  z-index: 5;
+}
+
+#final table {
+  margin-bottom: 20px;
+}
+
+#final td {
+  font-size: 10px;
+  vertical-align: top;
+}
+
+#final td p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 34px;
+}
+
+#final td div {
+  background: #218AB9;
+  text-align: center;
+  font-size: 30px;
+}
+
+#final .type {
+  text-transform: uppercase;
+}
