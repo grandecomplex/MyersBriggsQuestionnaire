@@ -164,8 +164,9 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     
     $body.on(endEvent, "#startOver", function() {
       that.resetMetrics();
-      $("#final").addClass("out");
-      that.start();
+      $(".s-*").attr("class", "");
+      
+      that.goTo($("#introduction"));
     });
   };
   
@@ -178,7 +179,9 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     
     this.counter.wrapper.show();
     
+    
     if (this.$panel && this.$panel.length) {
+      this.goToQuestion(0);
       return this.goTo(this.$panel);
     }
     
@@ -187,7 +190,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     
     this.goTo($panel);
 
-    $("#header").after(panel);
+    $(document.body).append(panel);
     
     utils.render(questions, "assets/partials/question-card.html", function(compiledHTML) {
       $panel.append(compiledHTML);
@@ -203,13 +206,13 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     var panels = this.$panel.find(".panel");
     this.itemCount = number;
     this.transition(panels.eq(number), this.$currentSlide);
-  }
+  };
   
   Q.prototype.next = function() {        
     var $outgoing = this.$currentSlide,
         $incoming = $outgoing.next();
     
-    if (TOTAL_QUESTIONS === this.itemCount) {
+    if (TOTAL_QUESTIONS === this.itemCount+1) {
       return this.finish();
     }
     
@@ -222,7 +225,9 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     var $outgoing = this.$currentSlide,
         $incoming = $outgoing.prev();
     
-    this.itemCount--;
+    if (this.itemCount > 0) {
+      this.itemCount--;
+    }
     
     if (!$incoming.length) {
       this.counter.wrapper.hide();
@@ -247,9 +252,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
 
     $incoming.find("h2").fadeIn();
 
-    if (this.itemCount !== 1) {
-      slide($outgoing, outClass);
-    }
+    slide($outgoing, outClass);
 
     slide($incoming, inClass);
         
@@ -263,6 +266,8 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     var stringResults = getStringResults(this.userMetrics);
     var metricsJson = JSON.stringify(this.userMetrics);
     
+    this.counter.wrapper.hide();
+    
     var content = {
       metrics: this.userMetrics,
       percentages: percentages,
@@ -272,8 +277,16 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     };
     
     utils.render(content, "assets/partials/final-card.html", function(compiledHTML) {
-      that.$final = $(compiledHTML);
-      $(document.body).append(that.$final);
+      var $final = that.$final;
+      var $html = $(compiledHTML);
+      
+      if ($final && $final.length) {
+        $final.html( $html.children() );
+      } else {
+        that.$final = $html;
+        $(document.body).append(that.$final);
+      }
+      
       that.goTo(that.$final);
     });
   };
@@ -294,16 +307,15 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   
   Q.prototype.updateCounter = function() {
     this.counter.current.text(this.itemCount+1);
-  }
+  };
   
   Q.prototype.goTo = function($section) {
     $("body > section").addClass("out").removeClass("in");
     $section.show().addClass("in").removeClass("out");
-  }
+  };
   
 
   
   return window.q = new Q();
 
 });
-

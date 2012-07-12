@@ -2,13 +2,13 @@ define(function() {
   var slide = function(parent, direction) {
     var $parent = $(parent),
         i = 0,
-        getChildren = function() {
-          return $parent.find("li");
-        },
-        length = getChildren().length;
+        $children = $parent.find("li"),
+        length = $children.length;
+        
+    $children.attr("class", "");
 
     function animate() {
-      getChildren().eq(i).attr("class",direction);
+      $children.eq(i).attr("class",direction);
 
       var timer = setTimeout(function() {
         i++;
