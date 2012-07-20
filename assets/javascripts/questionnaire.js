@@ -1,4 +1,4 @@
-define(["animation", "utils", "../data/questions"], function(slide, utils, questions) {
+define(["animation", "utils", "../data/questions", "signals", "hasher", "crossroads"], function(slide, utils, questions, signals, hasher, crossroads) {
   var hasTouch = 'ontouchstart' in window,
       resizeEvent = 'onorientationchange' in window ? 'orientationchange' : 'resize',
       startEvent = hasTouch ? 'touchstart' : 'mousedown',
@@ -78,6 +78,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   var Q = function() {
     var url = window.location.href;
     var index = url.lastIndexOf("?metrics=");
+    var that = this;
     
     this.itemCount = 0;
     
@@ -105,7 +106,51 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
       window.scrollTo( 0, 1 );
     }, 50);
     
+    
+    
+    var panel = document.createElement("section");
+    var $panel = this.$panel = $(panel);
+    
+    this.goToSection($panel);
+
+    $(document.body).append(panel);
+    
+    utils.render(questions, "assets/partials/question-card.html", function(compiledHTML) {
+      $panel.append(compiledHTML);
+      that.$currentSlide = $panel.children().first();
+      that.transition(that.$currentSlide);
+      if (callback) {
+        callback();
+      }
+    });
+    
+    
+    
     this.addEvents();
+    
+    this.addRoutes();
+  };
+  
+  Q.prototype.addRoutes = function() {
+    var that = this;
+    
+    crossroads.addRoute('/questions/{id}', function(id){
+      if ( (this.itemCount - 1) === id) {
+        that.prev();
+      } else if ( (this.itemCount + 1) === id) {
+        that.next();
+      } else {
+        that.goToQuestion(id);
+      }
+    });
+    
+    //setup hasher
+    function parseHash(newHash, oldHash){
+      crossroads.parse(newHash);
+    }
+    hasher.initialized.add(parseHash); // parse initial hash
+    hasher.changed.add(parseHash); //parse hash changes
+    hasher.init(); //start listening for history change
   };
   
   Q.prototype.resetMetrics = function() {
@@ -134,7 +179,6 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
       $this.addClass("highlighted");
       
       var timer = setTimeout(function() {
-        $this.removeClass("highlighted");
         if (this.itemCount === that.$panel.children().length) {
           that.finish();
         } else {
@@ -166,7 +210,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
       that.resetMetrics();
       $(".s-*").attr("class", "");
       
-      that.goTo($("#introduction"));
+      that.goToSection($("#introduction"));
     });
   };
   
@@ -176,30 +220,11 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
   
   Q.prototype.start = function(callback) {
     var that = this;
-    
+        
     this.counter.wrapper.show();
     
-    
-    if (this.$panel && this.$panel.length) {
-      this.goToQuestion(0);
-      return this.goTo(this.$panel);
-    }
-    
-    var panel = document.createElement("section");
-    var $panel = this.$panel = $(panel);
-    
-    this.goTo($panel);
-
-    $(document.body).append(panel);
-    
-    utils.render(questions, "assets/partials/question-card.html", function(compiledHTML) {
-      $panel.append(compiledHTML);
-      that.$currentSlide = $panel.children().first();
-      that.transition(that.$currentSlide);
-      if (callback) {
-        callback();
-      }
-    });
+    this.goToQuestion(0);
+    return this.goToSection(this.$panel);
   };
   
   Q.prototype.goToQuestion = function(number) {
@@ -231,7 +256,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     
     if (!$incoming.length) {
       this.counter.wrapper.hide();
-      return this.goTo($("#introduction"));
+      return this.goToSection($("#introduction"));
     }
 
     this.transition($incoming, $outgoing, "reverse");
@@ -245,7 +270,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     
     $incoming.addClass("slide-current");
     
-    if ($outgoing) {
+    if ($outgoing && $outgoing.length) {
       $outgoing.removeClass("slide-current");
       $outgoing.find("h2").fadeOut();
     }
@@ -287,7 +312,7 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
         $(document.body).append(that.$final);
       }
       
-      that.goTo(that.$final);
+      that.goToSection(that.$final);
     });
   };
   
@@ -309,12 +334,14 @@ define(["animation", "utils", "../data/questions"], function(slide, utils, quest
     this.counter.current.text(this.itemCount+1);
   };
   
-  Q.prototype.goTo = function($section) {
+  Q.prototype.goToSection = function($section) {
     $("body > section").addClass("out").removeClass("in");
     $section.show().addClass("in").removeClass("out");
   };
   
-
+  Q.prototype.save = function() {
+    
+  };
   
   return window.q = new Q();
 
