@@ -23,6 +23,10 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     return percentages;
   }
   
+  function setQuestionHash(id) {
+    hasher.setHash("questions/"+id);
+  }
+  
   function getStringResults(metrics) {
     var map = {
       e: "Extraversion",
@@ -76,6 +80,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   }
 
   var Q = function() {
+    // TODO use hasher and crossroads
     var url = window.location.href;
     var index = url.lastIndexOf("?metrics=");
     var that = this;
@@ -106,29 +111,30 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       window.scrollTo( 0, 1 );
     }, 50);
     
+    this.createQuestionnaire(function() {
+      that.addRoutes();
+      
+    });
     
+    this.addEvents();
     
+  };
+  
+  Q.prototype.createQuestionnaire = function(callback) {
     var panel = document.createElement("section");
     var $panel = this.$panel = $(panel);
+    var that = this;
     
-    this.goToSection($panel);
-
     $(document.body).append(panel);
     
     utils.render(questions, "assets/partials/question-card.html", function(compiledHTML) {
       $panel.append(compiledHTML);
-      that.$currentSlide = $panel.children().first();
-      that.transition(that.$currentSlide);
+      that.$questions = $panel.find(".panel");
+      
       if (callback) {
         callback();
       }
     });
-    
-    
-    
-    this.addEvents();
-    
-    this.addRoutes();
   };
   
   Q.prototype.addRoutes = function() {
@@ -142,6 +148,11 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       } else {
         that.goToQuestion(id);
       }
+    });
+    
+    crossroads.addRoute("", function() {
+      that.counter.wrapper.hide();
+      that.goToSection($("#introduction"));
     });
     
     //setup hasher
@@ -223,14 +234,17 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
         
     this.counter.wrapper.show();
     
-    this.goToQuestion(0);
+    setQuestionHash(this.itemCount);
+    
     return this.goToSection(this.$panel);
   };
   
   Q.prototype.goToQuestion = function(number) {
-    var panels = this.$panel.find(".panel");
     this.itemCount = number;
-    this.transition(panels.eq(number), this.$currentSlide);
+    if (this.$currentSection !== this.$panel) {
+      this.start();
+    }
+    this.transition(this.$questions.eq(number), this.$currentSlide);
   };
   
   Q.prototype.next = function() {        
@@ -242,8 +256,10 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     }
     
     this.itemCount++;
-
-    this.transition($incoming, $outgoing);
+    
+    setQuestionHash(this.itemCount);
+    
+  //  this.transition($incoming, $outgoing);
   };
   
   Q.prototype.previous = function() {    
@@ -256,10 +272,12 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     
     if (!$incoming.length) {
       this.counter.wrapper.hide();
-      return this.goToSection($("#introduction"));
+      this.goToSection($("#introduction"));
+    } else {
+      setQuestionHash(this.itemCount);
     }
 
-    this.transition($incoming, $outgoing, "reverse");
+  //  this.transition($incoming, $outgoing, "reverse");
   };
   
   Q.prototype.transition = function($incoming, $outgoing, direction) {
@@ -270,14 +288,14 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     
     $incoming.addClass("slide-current");
     
-    if ($outgoing && $outgoing.length) {
+    if ($outgoing && $outgoing.length && $outgoing !== $incoming) {
       $outgoing.removeClass("slide-current");
       $outgoing.find("h2").fadeOut();
+      slide($outgoing, outClass);
     }
 
     $incoming.find("h2").fadeIn();
 
-    slide($outgoing, outClass);
 
     slide($incoming, inClass);
         
@@ -331,12 +349,13 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   };
   
   Q.prototype.updateCounter = function() {
-    this.counter.current.text(this.itemCount+1);
+    this.counter.current.text(parseFloat(this.itemCount)+1);
   };
   
   Q.prototype.goToSection = function($section) {
     $("body > section").addClass("out").removeClass("in");
     $section.show().addClass("in").removeClass("out");
+    this.$currentSection = $section;
   };
   
   Q.prototype.save = function() {
