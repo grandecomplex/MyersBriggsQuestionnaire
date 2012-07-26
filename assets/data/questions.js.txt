@@ -6,42 +6,6 @@ Schema:
   {
    enfj: {
     description: "ENFJs are externally focused, introspective, altruistic, positive and have excellent people skills. They place utmost importance on helping others grow. They are warm and have a natural desire to be supportive and encouraging. Being charismatic and possessing excellent language skills, they do well in leadership roles. ENFJs strive to enhance the lives of their human brethren. \n
-
-ENFJs are often happy with the following jobs which tend to match well with the Mentor/Visionary personality: \n
-Accountant Auditor
-Artist
-Administrator
-Actor
-Administrative Assistant
-Banker Economist
-Consultant
-Computer Specialist
-Career Counselor
-Church Worker
-Diplomat
-Designer
-Events Coordinator
-Editor
-Engineer
-Facilitator
-Human Resources
-Homemaker
-Librarian
-Musician
-Nurse
-Occupational Therapist
-Psychiatrist
-Psychologist Counselor
-Project Manager
-Politician
-Social Worker
-Senior Manager
-Scientist
-Sales Representative
-Trainer
-Teacher Professor
-Technical Specialist
-Writer\n 
 ENFJ Population\n Total: 4%\n Male: 2.5%\n Female: 5.5% \n
 As an ENFJ, you're primary mode of living is focused externally, where you deal with things according to how you feel about them, or how they fit into your personal value system. Your secondary mode is internal, where you take things in primarily via your intuition.\n
 ENFJs are people-focused individuals. They live in the world of people possibilities. More so than any other type, they have excellent people skills. They understand and care about people, and have a special talent for bringing out the best in others. ENFJ's main interest in life is giving love, support, and a good time to other people. They are focused on understanding, supporting, and encouraging others. They make things happen for people, and get their best personal satisfaction from this.\n
