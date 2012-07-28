@@ -97,6 +97,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
         
     this.counter.total.text(TOTAL_QUESTIONS);
     
+    // TODO Use crossroads to route this.
     if (index > 0) {
       var data = window.location.href.substring(index+9, window.location.href.length);
       data = data.replace(/%22/g, '"');
@@ -153,6 +154,11 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     crossroads.addRoute("", function() {
       that.counter.wrapper.hide();
       that.goToSection($("#introduction"));
+    });
+    
+    crossroads.addRoute("finish", function() {
+      that.counter.wrapper.hide();
+      that.finish();
     });
     
     //setup hasher
@@ -220,7 +226,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     $body.on(endEvent, "#startOver", function() {
       that.resetMetrics();
       $(".s-*").attr("class", "");
-      
+      hasher.setHash("");
       that.goToSection($("#introduction"));
     });
   };
@@ -240,6 +246,9 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   };
   
   Q.prototype.goToQuestion = function(number) {
+    if (TOTAL_QUESTIONS <= (parseFloat(number)+1)) {
+      return this.finish();
+    }
     this.itemCount = number;
     if (this.$currentSection !== this.$panel) {
       this.start();
@@ -280,15 +289,17 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   //  this.transition($incoming, $outgoing, "reverse");
   };
   
+  /* Change Questions */
   Q.prototype.transition = function($incoming, $outgoing, direction) {
     var outClass = "s-out";
     var inClass = (direction === "reverse") ? "s-in-reverse" : "s-in";
     
+    /*  TODO: Use events instead  */
     this.updateCounter();
     
     $incoming.addClass("slide-current");
     
-    if ($outgoing && $outgoing.length && $outgoing !== $incoming) {
+    if ($outgoing && $outgoing.length && $outgoing[0] !== $incoming[0]) {
       $outgoing.removeClass("slide-current");
       $outgoing.find("h2").fadeOut();
       slide($outgoing, outClass);
@@ -318,6 +329,8 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       results: stringResults,
       metricsJson: metricsJson
     };
+    
+    hasher.setHash("finish");
     
     utils.render(content, "assets/partials/final-card.html", function(compiledHTML) {
       var $final = that.$final;
