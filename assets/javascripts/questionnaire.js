@@ -7,6 +7,8 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       cancelEvent = hasTouch ? 'touchcancel' : 'mouseup';
   
   var TOTAL_QUESTIONS = questions.questions.length;
+  
+  var DATA_NAMESPACE = "questionnaire";
 
   function getPercentage(number) {
     return Math.round( ( number / 30 ) * 100 );
@@ -101,6 +103,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     var url = window.location.href;
     var index = url.lastIndexOf("?metrics=");
     var that = this;
+    var savedData = localStorage.getItem(DATA_NAMESPACE);
     
     this.itemCount = 0;
     
@@ -121,6 +124,8 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       data = JSON.parse(data);
       this.userMetrics = data;
       this.finish();
+    } else if (savedData) {
+      this.userMetrics = JSON.parse(savedData);
     } else {
       this.resetMetrics();
     }
@@ -208,6 +213,9 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       var letterArrayIndex = getCurrentLetterIndex(  that.$currentSlide.index(), letterType  );
 
       that.userMetrics[letterType][letterArrayIndex] = $this.index();
+      
+      // TODO: Should do this via an event
+      that.save();
       
       $this.siblings().removeClass("highlighted");
       
@@ -372,8 +380,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     var stringResults = getStringResults(computedMetrics);
     var metricsJson = JSON.stringify(this.userMetrics);
     
-    
-    this.counter.wrapper.hide()
+    this.counter.wrapper.hide();
 
     var content = {
       percentages: percentages,
@@ -424,7 +431,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   };
   
   Q.prototype.save = function() {
-    
+    localStorage.setItem( DATA_NAMESPACE, JSON.stringify( this.userMetrics ) );
   };
   
   return window.q = new Q();
