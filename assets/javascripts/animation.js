@@ -5,10 +5,10 @@ define(function() {
         $children = $parent.find("li"),
         length = $children.length;
         
-    $children.attr("class", "");
+    $children.removeClass("s-out s-in");
 
     function animate() {
-      $children.eq(i).attr("class",direction);
+      $children.eq(i).addClass(direction);
 
       var timer = setTimeout(function() {
         i++;

@@ -23,6 +23,23 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     return percentages;
   }
   
+  function getcurrentLetterIndex(index, letter) {
+    var degree = {
+      e: 0,
+      i: 10,
+      n: 30,
+      s: 20,
+      f: 50,
+      t: 40,
+      p: 70,
+      j: 60
+    };
+    
+    degree = degree[letter];
+    
+    return degree + parseFloat(index);
+  }
+  
   function setQuestionHash(id) {
     hasher.setHash("questions/"+id);
   }
@@ -127,7 +144,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     var that = this;
     
     $(document.body).append(panel);
-    
+        
     utils.render(questions, "assets/partials/question-card.html", function(compiledHTML) {
       $panel.append(compiledHTML);
       that.$questions = $panel.find(".panel");
@@ -171,16 +188,14 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   };
   
   Q.prototype.resetMetrics = function() {
-    this.userMetrics = {
-      "e": 0,
-      "i": 0,
-      "n": 0,
-      "s": 0,
-      "f": 0,
-      "t": 0,
-      "p": 0,
-      "j": 0
-    };
+    var resetArray = [null,null,null,null,null,null,null,null,null,null];
+    var that = this;
+    
+    this.userMetrics = {};
+  
+    ["e", "i", "n", "s", "f", "t", "p", "j"].forEach(function(letter) {
+      that.userMetrics[letter] = resetArray;
+    });
   };
   
   Q.prototype.addEvents = function() {
@@ -191,7 +206,11 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       var $this = $(this);
       var letterType = $(".slide-current").attr("data-type");
       
-      that.userMetrics[letterType] += $this.index();
+      var letterArrayIndex = getcurrentLetterIndex(  that.$currentSlide.index(), letterType  );
+
+      that.userMetrics[letterType][letterArrayIndex] = $this.index();
+      
+      $this.siblings().removeClass("highlighted");
       
       $this.addClass("highlighted");
       
@@ -246,6 +265,8 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   };
   
   Q.prototype.goToQuestion = function(number) {
+    var letter, currentPoint, currentQuestionIndex;
+
     if (TOTAL_QUESTIONS <= (parseFloat(number)+1)) {
       return this.finish();
     }
@@ -254,6 +275,19 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       this.start();
     }
     this.transition(this.$questions.eq(number), this.$currentSlide);
+
+    // To highlight an already chosen answer
+    if (this.$currentSlide.length) {
+      letter = this.$currentSlide.attr("data-type");
+      
+      currentQuestionIndex = getcurrentLetterIndex(number, letter);
+      currentPoint = this.userMetrics[ letter ][ currentQuestionIndex ];
+  
+      if (currentPoint !== null && typeof currentPoint !== "undefined") {      
+        var $questions = this.$currentSlide.find(".form li");
+        $questions.eq(currentPoint).addClass("highlighted");
+      }
+    }
   };
   
   Q.prototype.next = function() {        
@@ -349,14 +383,14 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   
   Q.prototype.mockResults = function() {
     this.userMetrics = {
-      e: 9,
-      i: 18,
-      n: 1,
-      s: 0,
-      f: 20,
-      t: 5.00001,
-      p: 10.303040,
-      j: 15.999
+      e: [3, 3, 3, 1, 0, 0, 3, 2, 1, 0],
+      i: [3, 0, 2, 1, 0, 0, 3, 1, 1, 0],
+      n: [0, 1, 3, 1, 0, 0, 3, 1, 1, 0],
+      s: [0, 1, 3, 3, 3, 0, 3, 1, 1, 0],
+      f: [3, 0, 3, 3, 3, 3, 3, 3, 1, 0],
+      t: [2, 2, 3, 1, 0, 0, 2, 3, 1, 0],
+      p: [2, 1, 3, 1, 0, 0, 0, 3, 1, 0],
+      j: [3, 1, 3, 1, 0, 0, 0, 0, 0, 0]
     };
     this.finish();
   };
