@@ -350,7 +350,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     var that = this;
     var computedMetrics = [];
     
-    // TODO loop over results to construct percentages
+    // TODO Move out into a helper
     
     for (var letter in this.userMetrics) {
       var letterArray = this.userMetrics[letter];
@@ -376,7 +376,6 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     this.counter.wrapper.hide()
 
     var content = {
-      metrics: computedMetrics,
       percentages: percentages,
       type: type,
       results: stringResults,
