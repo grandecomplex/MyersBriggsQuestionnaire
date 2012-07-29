@@ -348,14 +348,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   
   Q.prototype.finish = function() {    
     var that = this;
-    var percentages = getPercentages(this.userMetrics);
-    var type = getType(this.userMetrics);
-    var stringResults = getStringResults(this.userMetrics);
-    var metricsJson = JSON.stringify(this.userMetrics);
     var computedMetrics = [];
-    
-    
-    this.counter.wrapper.hide();
     
     // TODO loop over results to construct percentages
     
@@ -365,11 +358,22 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       
       
       letterArray.forEach(function(point) {
-        totalPoints += parseFloat(point);
+        if (point !== null) {
+          totalPoints += parseFloat(point);
+        }
       });
       
       computedMetrics[letter] = totalPoints;
     }
+    
+    
+    var percentages = getPercentages(computedMetrics);
+    var type = getType(computedMetrics);
+    var stringResults = getStringResults(computedMetrics);
+    var metricsJson = JSON.stringify(this.userMetrics);
+    
+    
+    this.counter.wrapper.hide()
 
     var content = {
       metrics: computedMetrics,
