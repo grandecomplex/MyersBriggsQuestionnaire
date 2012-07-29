@@ -23,7 +23,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     return percentages;
   }
   
-  function getcurrentLetterIndex(index, letter) {
+  function getCurrentLetterIndex(index, letter) {
     var degree = {
       e: 0,
       i: 10,
@@ -37,7 +37,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     
     degree = degree[letter];
     
-    return degree + parseFloat(index);
+    return parseFloat(index) - degree;
   }
   
   function setQuestionHash(id) {
@@ -188,13 +188,12 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   };
   
   Q.prototype.resetMetrics = function() {
-    var resetArray = [null,null,null,null,null,null,null,null,null,null];
     var that = this;
     
     this.userMetrics = {};
   
     ["e", "i", "n", "s", "f", "t", "p", "j"].forEach(function(letter) {
-      that.userMetrics[letter] = resetArray;
+      that.userMetrics[letter] = [null,null,null,null,null,null,null,null,null,null];
     });
   };
   
@@ -204,9 +203,9 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     
     $body.on(endEvent, ".panel li", function() {
       var $this = $(this);
-      var letterType = $(".slide-current").attr("data-type");
+      var letterType = that.$currentSlide.attr("data-type");
       
-      var letterArrayIndex = getcurrentLetterIndex(  that.$currentSlide.index(), letterType  );
+      var letterArrayIndex = getCurrentLetterIndex(  that.$currentSlide.index(), letterType  );
 
       that.userMetrics[letterType][letterArrayIndex] = $this.index();
       
@@ -280,7 +279,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     if (this.$currentSlide.length) {
       letter = this.$currentSlide.attr("data-type");
       
-      currentQuestionIndex = getcurrentLetterIndex(number, letter);
+      currentQuestionIndex = getCurrentLetterIndex(number, letter);
       currentPoint = this.userMetrics[ letter ][ currentQuestionIndex ];
   
       if (currentPoint !== null && typeof currentPoint !== "undefined") {      
@@ -353,11 +352,27 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     var type = getType(this.userMetrics);
     var stringResults = getStringResults(this.userMetrics);
     var metricsJson = JSON.stringify(this.userMetrics);
+    var computedMetrics = [];
+    
     
     this.counter.wrapper.hide();
     
+    // TODO loop over results to construct percentages
+    
+    for (var letter in this.userMetrics) {
+      var letterArray = this.userMetrics[letter];
+      var totalPoints = 0;
+      
+      
+      letterArray.forEach(function(point) {
+        totalPoints += parseFloat(point);
+      });
+      
+      computedMetrics[letter] = totalPoints;
+    }
+
     var content = {
-      metrics: this.userMetrics,
+      metrics: computedMetrics,
       percentages: percentages,
       type: type,
       results: stringResults,
