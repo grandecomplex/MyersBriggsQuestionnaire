@@ -9,7 +9,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   var TOTAL_QUESTIONS = questions.questions.length;
 
   function getPercentage(number) {
-    return Math.round( ( number / 20 ) * 100 );
+    return Math.round( ( number / 30 ) * 100 );
   }
   
   function getPercentages(metrics) {
@@ -406,7 +406,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       i: [3, 0, 2, 1, 0, 0, 3, 1, 1, 0],
       n: [0, 1, 3, 1, 0, 0, 3, 1, 1, 0],
       s: [0, 1, 3, 3, 3, 0, 3, 1, 1, 0],
-      f: [3, 0, 3, 3, 3, 3, 3, 3, 1, 0],
+      f: [3, 0, 3, 3, 2, 2, 3, 3, 1, 0],
       t: [2, 2, 3, 1, 0, 0, 2, 3, 1, 0],
       p: [2, 1, 3, 1, 0, 0, 0, 3, 1, 0],
       j: [3, 1, 3, 1, 0, 0, 0, 0, 0, 0]

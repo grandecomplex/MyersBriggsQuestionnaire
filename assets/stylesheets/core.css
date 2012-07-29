@@ -107,6 +107,7 @@ button,
 
 #final table {
   margin-bottom: 20px;
+  width: 100%;
 }
 
 #final td {
@@ -129,3 +130,4 @@ button,
 #final .type {
   text-transform: uppercase;
 }
+
