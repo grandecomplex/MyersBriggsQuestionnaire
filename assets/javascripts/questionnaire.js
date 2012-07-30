@@ -205,6 +205,10 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   Q.prototype.resetMetrics = function() {
     var that = this;
     
+    localStorage.removeItem(DATA_NAMESPACE);
+    
+    this.itemCount = 0;
+    
     this.userMetrics = {};
   
     ["e", "i", "n", "s", "f", "t", "p", "j"].forEach(function(letter) {
