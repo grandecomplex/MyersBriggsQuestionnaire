@@ -25,6 +25,15 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     return percentages;
   }
   
+  function toggleToolbarControls(shouldShow) {
+    var $controls = $(".toolbar-controls");
+    if (shouldShow) {
+      $controls.show();
+    } else {
+      $controls.hide();
+    }
+  }
+  
   function getCurrentLetterIndex(index, letter) {
     var degree = {
       e: 0,
@@ -174,12 +183,13 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     });
     
     crossroads.addRoute("", function() {
-      that.counter.wrapper.hide();
+      toggleToolbarControls(false);
+
       that.goToSection($("#introduction"));
     });
     
-    crossroads.addRoute("finish", function() {
-      that.counter.wrapper.hide();
+    crossroads.addRoute("results", function() {
+      toggleToolbarControls(false);
       that.finish();
     });
     
@@ -264,7 +274,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
   Q.prototype.start = function(callback) {
     var that = this;
         
-    this.counter.wrapper.show();
+    toggleToolbarControls(true);
     
     setQuestionHash(this.itemCount);
     
@@ -321,7 +331,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     }
     
     if (!$incoming.length) {
-      this.counter.wrapper.hide();
+      toggleToolbarControls(false);
       this.goToSection($("#introduction"));
     } else {
       setQuestionHash(this.itemCount);
@@ -380,7 +390,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     var stringResults = getStringResults(computedMetrics);
     var metricsJson = JSON.stringify(this.userMetrics);
     
-    this.counter.wrapper.hide();
+    toggleToolbarControls(false);
 
     var content = {
       percentages: percentages,
@@ -389,7 +399,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
       metricsJson: metricsJson
     };
     
-    hasher.setHash("finish");
+    hasher.setHash("results");
     
     utils.render(content, "assets/partials/final-card.html", function(compiledHTML) {
       var $final = that.$final;

@@ -74,11 +74,19 @@ header h1 {
   line-height: 20px;
 }
 
-header p {
-  float: left;
+header .toolbar-controls {
+  position: absolute;
+  top: 15px;
+}
+
+header .controls-left {
   margin-left: 10px;
   color: #fff;
-  position: absolute;
+}
+
+header .controls-right {
+  right: 0px;
+  margin-right: 10px;
 }
 
 #introduction {
