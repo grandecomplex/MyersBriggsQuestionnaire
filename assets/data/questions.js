@@ -353,7 +353,7 @@ define(function() {
       letter: "n"
       },
       {
-        title: "I pay attention to what is going on in my immediate surrounds.  I can be very unaware of the here and now.",
+        title: "I pay little attention to what is going on in my immediate surrounds.  I can be very unaware of the here and now.",
         choices: [
           "This is not like me at all",
           "This is somewhat like me",
