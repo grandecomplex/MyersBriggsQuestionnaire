@@ -266,6 +266,7 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     $body.on(endEvent, "#startOver", function() {
       that.resetMetrics();
       $(".s-*").attr("class", "");
+      that.$questions.find(".highlighted").removeClass("highlighted");
       hasher.setHash("");
       that.goToSection($("#introduction"));
     });
