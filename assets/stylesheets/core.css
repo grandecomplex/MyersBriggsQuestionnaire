@@ -18,6 +18,7 @@ h2 {
   font-size: 33px;
   margin-bottom: 10px;
   line-height: 33px;
+  color: #58717A;
 }
 
 .none {
@@ -44,6 +45,7 @@ h2 {
 
 .titleContainer {
   padding: 10px;
+  border-bottom: 1px solid #DBDBDB;
 }
 
 h1 {
