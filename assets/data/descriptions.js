@@ -214,7 +214,7 @@ Under stress, ISTJs may fall into "catastrophe mode", where they see nothing but
 In general, the ISTJ has a tremendous amount of potential. Capable, logical, reasonable, and effective individuals with a deeply driven desire to promote security and peaceful living, the ISTJ has what it takes to be highly effective at achieving their chosen goals - whatever they may be.",
    },
    istp: {
-    description: "ENTP are pretty cool.\n 
+    description: "ENTP are pretty cool.\n
 As an ISTP, your primary mode of living is focused internally, where you deal with things rationally and logically. Your secondary mode is external, where you take things in via your five senses in a literal, concrete fashion.\n
 ISTPs have a compelling drive to understand the way things work. They're good at logical analysis, and like to use it on practical concerns. They typically have strong powers of reasoning, although they're not interested in theories or concepts unless they can see a practical application. They like to take things apart and see the way they work.\n
 ISTPs have an adventuresome spirit. They are attracted to motorcycles, airplanes, sky diving, surfing, etc. They thrive on action, and are usually fearless. ISTPs are fiercely independent, needing to have the space to make their own decisions about their next step. They do not believe in or follow rules and regulations, as this would prohibit their ability to "do their own thing". Their sense of adventure and desire for constant action makes ISTPs prone to becoming bored rather quickly.\n
@@ -240,6 +240,14 @@ Example:
 
 
 {
-  entj: "The best kind of person possible.",
+  entj: {
+    description: "
+    <h3>Hi I am a header 3</h3>
+    <p>I"m a paragraph</p>
+    <ul>
+         <li>fsdfasdf</li>
+    </ul>
+    "
+  }
   isfp: "Worst kind of person possible."
 }
