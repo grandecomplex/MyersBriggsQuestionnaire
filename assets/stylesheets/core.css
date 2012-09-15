@@ -1,6 +1,8 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400);
+
 body {
   background:transparent url('../images/pattern.png') repeat !important;
-  font-family: "helvetica neue", helvetica, sans-serif;
+  font-family: "Lato", "helvetica neue", helvetica, sans-serif;
   padding-top: 44px;
   margin: 0;
   height: 370px;
@@ -9,6 +11,13 @@ body {
 h1, h2, h3, h4, h5, h6, p, label {
   color: #2A2A2A;
   margin-top: 0;
+}
+
+h2 {
+  font-weight: 300;
+  font-size: 33px;
+  margin-bottom: 10px;
+  line-height: 33px;
 }
 
 .none {
