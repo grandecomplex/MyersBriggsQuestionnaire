@@ -421,17 +421,20 @@ define(["animation", "utils", "../data/questions", "signals", "hasher", "crossro
     });
   };
   
+  
+  // This creates arrays of 10 digits between 0-3 for each of the letters
   Q.prototype.mockResults = function() {
-    this.userMetrics = {
-      e: [3, 3, 3, 1, 0, 0, 3, 2, 1, 0],
-      i: [3, 0, 2, 1, 0, 0, 3, 1, 1, 0],
-      n: [0, 1, 3, 1, 0, 0, 3, 1, 1, 0],
-      s: [0, 1, 3, 3, 3, 0, 3, 1, 1, 0],
-      f: [3, 0, 3, 3, 2, 2, 3, 3, 1, 0],
-      t: [2, 2, 3, 1, 0, 0, 2, 3, 1, 0],
-      p: [2, 1, 3, 1, 0, 0, 0, 3, 1, 0],
-      j: [3, 1, 3, 1, 0, 0, 0, 0, 0, 0]
-    };
+    "einsftpj".split("").forEach(function(letter) {
+      var count = 0;
+      var score = [];
+      while (count < 10) {
+        score.unshift(Math.ceil(Math.random() * 3) );
+        count++;
+      }
+      
+      this.userMetric[letter] = score;
+    });
+    
     this.finish();
   };
   
